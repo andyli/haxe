@@ -414,6 +414,89 @@ class StringTools {
 		#end
 	}
 
+	/**
+		Returns a String that can be used as a single command line argument
+		on Unix.
+		The input will be quoted, or escaped if necessary.
+	*/
+	public static function quoteUnixArg(argument:String):String {
+		// Based on cpython's shlex.quote().
+		// https://hg.python.org/cpython/file/a3f076d4f54f/Lib/shlex.py#l278
+
+		if (argument == "")
+			return "''";
+
+		if (!~/[^a-zA-Z0-9_@%+=:,.\/-]/.match(argument))
+			return argument;
+
+		// use single quotes, and put single quotes into double quotes
+		// the string $'b is then quoted as '$'"'"'b'
+		return "'" + replace(argument, "'", "'\"'\"'") + "'";
+	}
+
+	/**
+		Returns a String that can be used as a single command line argument
+		on Windows.
+		The input will be quoted, or escaped if necessary, such that the output
+		will be parsed as a single argument using the rule specified in
+		http://msdn.microsoft.com/en-us/library/ms880421
+
+		Examples:
+		```
+		quoteWinArg("abc") == "abc";
+		quoteWinArg("ab c") == '"ab c"';
+		```
+	*/
+	public static function quoteWinArg(argument:String):String {
+		// If there is no space, tab, back-slash, or double-quotes, and it is not an empty string.
+		if (~/^[^ \t\\"]+$/.match(argument)) {
+			return argument;
+		}
+
+		// Based on cpython's subprocess.list2cmdline().
+		// https://hg.python.org/cpython/file/50741316dd3a/Lib/subprocess.py#l620
+
+		var result = new StringBuf();
+		var needquote = argument.indexOf(" ") != -1 || argument.indexOf("\t") != -1 || argument == "";
+
+		if (needquote)
+			result.add('"');
+
+		var bs_buf = new StringBuf();
+		for (i in 0...argument.length) {
+			switch (argument.charCodeAt(i)) {
+				case "\\".code:
+					// Don't know if we need to double yet.
+					bs_buf.add("\\");
+				case '"'.code:
+					// Double backslashes.
+					for (_ in 0...bs_buf.length*2)
+						result.add("\\");
+					bs_buf = new StringBuf();
+					result.add('\\"');
+				case c:
+					// Normal char
+					if (bs_buf.length > 0) {
+						result.add(bs_buf.toString());
+						bs_buf = new StringBuf();
+					}
+					result.addChar(c);
+			}
+		}
+
+		// Add remaining backslashes, if any.
+		if (bs_buf.length > 0) {
+			result.add(bs_buf.toString());
+		}
+
+		if (needquote) {
+			result.add(bs_buf.toString());
+			result.add('"');
+		}
+
+		return result.toString();
+	}
+
 	#if java
 	private static inline function _charAt(str:String, idx:Int):java.StdTypes.Char16 return untyped str._charAt(idx);
 	#end

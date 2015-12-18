@@ -142,3 +142,9 @@ StringTools.isEof( -1) == true;
 #else
 StringTools.isEof(0) == true;
 #end
+
+// quoteWinArg
+StringTools.quoteWinArg("abc") == "abc";
+StringTools.quoteWinArg("ab c") == '"ab c"';
+StringTools.quoteWinArg("ab\tc") == '"ab\tc"';
+StringTools.quoteWinArg("") == '""';
