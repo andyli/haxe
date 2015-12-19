@@ -14,7 +14,7 @@ class FileNames {
 		[for (i in 0...250) "a"].join(""),
 
 		// 255 bytes is the max filename length according to http://en.wikipedia.org/wiki/Comparison_of_file_systems
-		#if !(python || neko || cpp)
+		#if !(python || neko || cpp || java)
 		[for (i in 0...255) "a"].join(""),
 		#end
 	];

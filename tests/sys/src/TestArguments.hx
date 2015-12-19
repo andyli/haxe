@@ -35,18 +35,18 @@ class TestArguments extends haxe.unit.TestCase {
 		// kind of an escaped double quote
 		'\\"',
 
-		// // space
+		// space
 		" ",
-		// // kind of an escaped space
+		// kind of an escaped space
 		"\\ ",
 
-		// // empty string
+		// empty string
 		"",
 
-		// // linebreak
+		// linebreak
 		"\n",
 
-		// // Chinese, Japanese
+		// Chinese, Japanese
 		"中文，にほんご",
 
 		// complex stuff
