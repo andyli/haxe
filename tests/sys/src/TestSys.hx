@@ -4,7 +4,7 @@ class TestSys extends haxe.unit.TestCase {
 		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
-		#if !cs
+		#if !(cs || cpp)
 		var exitCode = Sys.command("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
 		if (exitCode != 0)
 			trace(sys.io.File.getContent(TestArguments.log));

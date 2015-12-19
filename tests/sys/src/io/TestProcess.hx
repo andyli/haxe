@@ -8,7 +8,7 @@ class TestProcess extends haxe.unit.TestCase {
 		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
-		#if !cs
+		#if !(cs || cpp)
 		var process = new Process("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
 		var exitCode = process.exitCode();
 		if (exitCode != 0)

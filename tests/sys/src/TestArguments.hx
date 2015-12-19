@@ -40,11 +40,13 @@ class TestArguments extends haxe.unit.TestCase {
 		// kind of an escaped space
 		"\\ ",
 
+		#if !cpp //https://github.com/HaxeFoundation/hxcpp/issues/342
 		// empty string
 		"",
 
 		// linebreak
 		"\n",
+		#end
 
 		// Chinese, Japanese
 		"中文，にほんご",
