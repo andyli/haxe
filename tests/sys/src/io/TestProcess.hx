@@ -8,11 +8,13 @@ class TestProcess extends haxe.unit.TestCase {
 		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
+		#if !cs
 		var process = new Process("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
 		var exitCode = process.exitCode();
 		if (exitCode != 0)
 			trace(sys.io.File.getContent(TestArguments.log));
 		assertEquals(0, exitCode);
+		#end
 
 		var process =
 			#if (macro || interp)
@@ -43,7 +45,7 @@ class TestProcess extends haxe.unit.TestCase {
 		assertEquals(0, exitCode);
 	}
 
-	#if !(neko || cpp || cs) //FIXME
+	#if !cs //FIXME
 	function testCommandName() {
 		// This is just a script that behaves like ExitCode.hx, 
 		// which exits with the code same as the first given argument. 
@@ -107,7 +109,7 @@ class TestProcess extends haxe.unit.TestCase {
 			sys.FileSystem.deleteFile(path);
 		}
 	}
-	#end //!neko
+	#end //!cs
 
 	#end //!php
 

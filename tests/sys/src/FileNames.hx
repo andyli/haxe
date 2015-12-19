@@ -6,10 +6,16 @@ class FileNames {
 		"two words",
 
 		// Chinese, Japanese
-		// "中文，にほんご",
+		#if !(cs || python || php || neko || cpp)
+		"中文，にほんご",
+		#end
 
-		// "aaa...a" that has 255 characters
+		// "aaa...a"
+		[for (i in 0...250) "a"].join(""),
+
 		// 255 bytes is the max filename length according to http://en.wikipedia.org/wiki/Comparison_of_file_systems
-		// [for (i in 0...255) "a"].join("")
+		#if !(python || neko || cpp)
+		[for (i in 0...255) "a"].join(""),
+		#end
 	];
 }

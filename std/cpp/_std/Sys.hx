@@ -81,27 +81,10 @@
 		return sys_string();
 	}
 
-	static function escapeArgument( arg : String ) : String {
-		var ok = true;
-		for( i in 0...arg.length )
-			switch( arg.charCodeAt(i) ) {
-			case ' '.code, '\t'.code, '"'.code, '&'.code, '|'.code, '<'.code, '>'.code, '#'.code , ';'.code, '*'.code, '?'.code, '('.code, ')'.code, '{'.code, '}'.code, '$'.code:
-				ok = false;
-			case 0, 13, 10: // [eof] [cr] [lf]
-				arg = arg.substr(0,i);
-			}
-		if( ok )
-			return arg;
-		return '"'+arg.split('\\').join("\\\\").split('"').join('\\"')+'"';
-	}
-
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		if( args != null ) {
-			cmd = escapeArgument(cmd);
-			for( a in args )
-				cmd += " "+escapeArgument(a);
-		}
-		if (systemName() == "Windows") cmd = '"$cmd"';
+		var cmd = [cmd].concat(args)
+			.map(systemName() == "Windows" ? StringTools.quoteWinArg : StringTools.quoteUnixArg)
+			.join(" ");
 		return sys_command(cmd);
 	}
 

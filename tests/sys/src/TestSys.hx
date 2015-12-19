@@ -4,10 +4,12 @@ class TestSys extends haxe.unit.TestCase {
 		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
+		#if !cs
 		var exitCode = Sys.command("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
 		if (exitCode != 0)
 			trace(sys.io.File.getContent(TestArguments.log));
 		assertEquals(0, exitCode);
+		#end
 
 		var exitCode =
 			#if (macro || interp)

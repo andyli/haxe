@@ -91,29 +91,10 @@
 		return new String(sys_string());
 	}
 
-	static function escapeArgument( arg : String, windows : Bool ) : String {
-		var ok = true;
-		for( i in 0...arg.length )
-			switch( arg.charCodeAt(i) ) {
-			case ' '.code, '\t'.code, '"'.code, '&'.code, '|'.code, '<'.code, '>'.code, '#'.code , ';'.code, '*'.code, '?'.code, '('.code, ')'.code, '{'.code, '}'.code, '$'.code:
-				ok = false;
-			case 0, 13, 10: // [eof] [cr] [lf]
-				arg = arg.substr(0,i);
-				break;
-			}
-		if( ok )
-			return arg;
-		return windows ? '"'+arg.split('"').join('""').split("%").join('"%"')+'"' : "'"+arg.split("'").join("'\\''")+"'";
-	}
-
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		var win = systemName() == "Windows";
-		cmd = escapeArgument(cmd, win);
-		if( args != null ) {
-			for( a in args )
-				cmd += " "+escapeArgument(a, win);
-		}
-		if (win) cmd = '"$cmd"';
+		var cmd = [cmd].concat(args)
+			.map(systemName() == "Windows" ? StringTools.quoteWinArg : StringTools.quoteUnixArg)
+			.join(" ");
 		return sys_command(untyped cmd.__s);
 	}
 

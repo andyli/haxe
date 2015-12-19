@@ -148,3 +148,7 @@ StringTools.quoteWinArg("abc") == "abc";
 StringTools.quoteWinArg("ab c") == '"ab c"';
 StringTools.quoteWinArg("ab\tc") == '"ab\tc"';
 StringTools.quoteWinArg("") == '""';
+
+// quoteUnixArg
+StringTools.quoteUnixArg("abc") == "abc";
+StringTools.quoteUnixArg("ls -l 'somefile; rm -rf ~'") == "'ls -l '\"'\"'somefile; rm -rf ~'\"'\"''";
