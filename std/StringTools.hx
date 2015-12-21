@@ -470,8 +470,9 @@ class StringTools {
 					bs_buf.add("\\");
 				case '"'.code:
 					// Double backslashes.
-					for (_ in 0...bs_buf.length*2)
-						result.add("\\");
+					var bs = bs_buf.toString();
+					result.add(bs);
+					result.add(bs);
 					bs_buf = new StringBuf();
 					result.add('\\"');
 				case c:
@@ -485,9 +486,7 @@ class StringTools {
 		}
 
 		// Add remaining backslashes, if any.
-		if (bs_buf.length > 0) {
-			result.add(bs_buf.toString());
-		}
+		result.add(bs_buf.toString());
 
 		if (needquote) {
 			result.add(bs_buf.toString());
