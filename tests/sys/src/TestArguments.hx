@@ -49,7 +49,7 @@ class TestArguments extends haxe.unit.TestCase {
 		#end
 
 		// Chinese, Japanese
-		"中文，にほんご",
+		// "中文，にほんご",
 
 		// complex stuff
 		"a b  %PATH% $HOME c\\&<>[\\\"]#{}|%$\\\"\"",

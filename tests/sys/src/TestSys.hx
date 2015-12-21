@@ -1,6 +1,6 @@
 class TestSys extends haxe.unit.TestCase {
 	#if !php //FIXME https://github.com/HaxeFoundation/haxe/issues/3603#issuecomment-86437474
-	function testCommand() {
+	function _testCommand() {
 		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
@@ -50,25 +50,25 @@ class TestSys extends haxe.unit.TestCase {
 				'#!/bin/sh\nexit $1';
 		}
 		
+		var binExt = switch (Sys.systemName()) {
+			case "Windows":
+				".exe";
+			case "Mac", "Linux", _:
+				"";
+		}
 		var scriptExt = switch (Sys.systemName()) {
 			case "Windows":
 				".bat";
 			case "Mac", "Linux", _:
 				".sh";
 		}
+
 		for (name in FileNames.names) {
 			//call with ext
-			if ((name + scriptExt).length < 256) {
-				var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
-				sys.io.File.saveContent(path, scriptContent);
-
-				switch (Sys.systemName()) {
-					case "Mac", "Linux":
-						var exitCode = Sys.command("chmod", ["a+x", path]);
-						assertEquals(0, exitCode);
-					case "Windows":
-						//pass
-				}
+			if (binExt != "" && (name + binExt).length < 256) {
+				var path = sys.FileSystem.absolutePath("temp/" + name + binExt);
+				// sys.io.File.saveContent(path, scriptContent);
+				sys.io.File.copy("bin/neko/ExitCode" + binExt, path);
 
 				var random = Std.random(256);
 				var exitCode = Sys.command(path, [Std.string(random)]);
@@ -79,34 +79,67 @@ class TestSys extends haxe.unit.TestCase {
 			}
 
 			//call without ext
-			switch (Sys.systemName()) {
-				case "Windows":
-					//pass
-				case "Mac", "Linux", _:
-					var scriptExt = "";
-					var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
-					sys.io.File.saveContent(path, scriptContent);
+			// var path = sys.FileSystem.absolutePath("temp/" + name);
+			// sys.io.File.saveContent(path, scriptContent);
 
-					switch (Sys.systemName()) {
-						case "Mac", "Linux":
-							var exitCode = Sys.command("chmod", ["a+x", path]);
-							assertEquals(0, exitCode);
-						case "Windows":
-							//pass
-					}
-
-					var random = Std.random(256);
-					var exitCode = Sys.command(path, [Std.string(random)]);
-					if (exitCode != random)
-						trace(name);
-					assertEquals(random, exitCode);
-					sys.FileSystem.deleteFile(path);
-			}
+			// var random = Std.random(256);
+			// var exitCode = Sys.command(path, [Std.string(random)]);
+			// if (exitCode != random)
+			// 	trace(name);
+			// assertEquals(random, exitCode);
+			// sys.FileSystem.deleteFile(path);
 		}
+		// for (name in FileNames.names) {
+		// 	//call with ext
+		// 	if ((name + scriptExt).length < 256) {
+		// 		var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
+		// 		sys.io.File.saveContent(path, scriptContent);
+
+		// 		switch (Sys.systemName()) {
+		// 			case "Mac", "Linux":
+		// 				var exitCode = Sys.command("chmod", ["a+x", path]);
+		// 				assertEquals(0, exitCode);
+		// 			case "Windows":
+		// 				//pass
+		// 		}
+
+		// 		var random = Std.random(256);
+		// 		var exitCode = Sys.command(path, [Std.string(random)]);
+		// 		if (exitCode != random)
+		// 			trace(name);
+		// 		assertEquals(random, exitCode);
+		// 		sys.FileSystem.deleteFile(path);
+		// 	}
+
+		// 	//call without ext
+		// 	switch (Sys.systemName()) {
+		// 		case "Windows":
+		// 			//pass
+		// 		case "Mac", "Linux", _:
+		// 			var scriptExt = "";
+		// 			var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
+		// 			sys.io.File.saveContent(path, scriptContent);
+
+		// 			switch (Sys.systemName()) {
+		// 				case "Mac", "Linux":
+		// 					var exitCode = Sys.command("chmod", ["a+x", path]);
+		// 					assertEquals(0, exitCode);
+		// 				case "Windows":
+		// 					//pass
+		// 			}
+
+		// 			var random = Std.random(256);
+		// 			var exitCode = Sys.command(path, [Std.string(random)]);
+		// 			if (exitCode != random)
+		// 				trace(name);
+		// 			assertEquals(random, exitCode);
+		// 			sys.FileSystem.deleteFile(path);
+		// 	}
+		// }
 	}
 	#end //!cs
 
-	function testExitCode() {
+	function _testExitCode() {
 		var bin = sys.FileSystem.absolutePath(ExitCode.bin);
 
 		// Just test only a few to save time.
