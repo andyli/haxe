@@ -92,10 +92,11 @@
 	}
 
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		var cmd = [cmd].concat(args)
-			.map(systemName() == "Windows" ? StringTools.quoteWinArg : StringTools.quoteUnixArg)
-			.join(" ");
-		return sys_command(untyped cmd.__s);
+		// var cmd = [cmd].concat(args)
+		// 	.map(systemName() == "Windows" ? StringTools.quoteWinArg : StringTools.quoteUnixArg)
+		// 	.join(" ");
+		// return sys_command(untyped cmd.__s);
+		return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
 	}
 
 	public static function exit( code : Int ) : Void {
@@ -132,6 +133,7 @@
 	private static var set_cwd = neko.Lib.load("std","set_cwd",1);
 	private static var sys_string = neko.Lib.load("std","sys_string",0);
 	private static var sys_command = neko.Lib.load("std","sys_command",1);
+	private static var sys_command_safe = neko.Lib.load("std","sys_command_safe",2);
 	private static var sys_exit = neko.Lib.load("std","sys_exit",1);
 	private static var sys_time = neko.Lib.load("std","sys_time",0);
 	private static var sys_cpu_time = neko.Lib.load("std","sys_cpu_time",0);
