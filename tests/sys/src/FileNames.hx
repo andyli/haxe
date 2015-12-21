@@ -12,7 +12,9 @@ class FileNames {
 
 		// "aaa...a"
 		[for (i in 0...100) "a"].join(""),
-	].concat(switch (Sys.systemName()) {
+	]
+	// long file name
+	.concat(switch (Sys.systemName()) {
 		case "Windows":
 			// http://stackoverflow.com/a/265782/267998
 			[];
