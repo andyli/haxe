@@ -104,7 +104,7 @@
 					p.close();
 					return exitCode;
 				case _:
-					cmd = [cmd].concat(args.map(StringTools.quoteUnixArg)).join(" ");
+					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
 					return sys_command(untyped cmd.__s);
 			}
 		}
