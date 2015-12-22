@@ -80,8 +80,16 @@ class TestCommandBase extends haxe.unit.TestCase {
 						//pass
 				}
 
+				Sys.sleep(0.1);
+
 				var random = Std.random(256);
-				var exitCode = run(path, [Std.string(random)]);
+				var exitCode = try {
+					run(path, [Std.string(random)]);
+				} catch (e:Dynamic) {
+					trace(e);
+					trace(name);
+					assertTrue(false);
+				}
 				if (exitCode != random)
 					trace(name);
 				assertEquals(random, exitCode);
