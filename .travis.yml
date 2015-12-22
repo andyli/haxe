@@ -115,7 +115,7 @@ install:
     fi
   # Install neko
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-      travis_retry git clone https://github.com/HaxeFoundation/neko.git ~/neko;
+      travis_retry git clone https://github.com/andyli/neko.git ~/neko;
       cd ~/neko;
       make os=${TRAVIS_OS_NAME} -s;
       export PATH="$PATH:$HOME/neko/bin";
