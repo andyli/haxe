@@ -47,12 +47,18 @@ class TestCommandBase extends haxe.unit.TestCase {
 	function testCommandName() {
 		// This is just a script that behaves like ExitCode.hx, 
 		// which exits with the code same as the first given argument. 
-		var scriptContent = switch (Sys.systemName()) {
-			case "Windows":
-				'@echo off\nexit /b %1';
-			case "Mac", "Linux", _:
-				'#!/bin/sh\nexit $1';
-		}
+		// var scriptContent = switch (Sys.systemName()) {
+		// 	case "Windows":
+		// 		'@echo off\nexit /b %1';
+		// 	case "Mac", "Linux", _:
+		// 		'#!/bin/sh\nexit $1';
+		// }
+		// var scriptExt = switch (Sys.systemName()) {
+		// 	case "Windows":
+		// 		".bat";
+		// 	case "Mac", "Linux", _:
+		// 		".sh";
+		// }
 		
 		var binExt = switch (Sys.systemName()) {
 			case "Windows":
@@ -60,19 +66,19 @@ class TestCommandBase extends haxe.unit.TestCase {
 			case "Mac", "Linux", _:
 				"";
 		}
-		var scriptExt = switch (Sys.systemName()) {
-			case "Windows":
-				".bat";
-			case "Mac", "Linux", _:
-				".sh";
-		}
 
 		for (name in FileNames.names) {
-			//call with ext
-			if (binExt != "" && (name + binExt).length < 256) {
+			if ((name + binExt).length < 256) {
 				var path = sys.FileSystem.absolutePath("temp/" + name + binExt);
 				// sys.io.File.saveContent(path, scriptContent);
 				sys.io.File.copy("bin/neko/ExitCode" + binExt, path);
+				switch (Sys.systemName()) {
+					case "Mac", "Linux":
+						var exitCode = run("chmod", ["a+x", path]);
+						assertEquals(0, exitCode);
+					case "Windows":
+						//pass
+				}
 
 				var random = Std.random(256);
 				var exitCode = run(path, [Std.string(random)]);
@@ -82,53 +88,6 @@ class TestCommandBase extends haxe.unit.TestCase {
 				sys.FileSystem.deleteFile(path);
 			}
 		}
-		// for (name in FileNames.names) {
-		// 	//call with ext
-		// 	if ((name + scriptExt).length < 256) {
-		// 		var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
-		// 		sys.io.File.saveContent(path, scriptContent);
-
-		// 		switch (Sys.systemName()) {
-		// 			case "Mac", "Linux":
-		// 				var exitCode = run("chmod", ["a+x", path]);
-		// 				assertEquals(0, exitCode);
-		// 			case "Windows":
-		// 				//pass
-		// 		}
-
-		// 		var random = Std.random(256);
-		// 		var exitCode = run(path, [Std.string(random)]);
-		// 		if (exitCode != random)
-		// 			trace(name);
-		// 		assertEquals(random, exitCode);
-		// 		sys.FileSystem.deleteFile(path);
-		// 	}
-
-		// 	//call without ext
-		// 	switch (Sys.systemName()) {
-		// 		case "Windows":
-		// 			//pass
-		// 		case "Mac", "Linux", _:
-		// 			var scriptExt = "";
-		// 			var path = sys.FileSystem.absolutePath("temp/" + name + scriptExt);
-		// 			sys.io.File.saveContent(path, scriptContent);
-
-		// 			switch (Sys.systemName()) {
-		// 				case "Mac", "Linux":
-		// 					var exitCode = run("chmod", ["a+x", path]);
-		// 					assertEquals(0, exitCode);
-		// 				case "Windows":
-		// 					//pass
-		// 			}
-
-		// 			var random = Std.random(256);
-		// 			var exitCode = run(path, [Std.string(random)]);
-		// 			if (exitCode != random)
-		// 				trace(name);
-		// 			assertEquals(random, exitCode);
-		// 			sys.FileSystem.deleteFile(path);
-		// 	}
-		// }
 	}
 	#end //!cs
 
