@@ -92,12 +92,16 @@
 	}
 
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		var p = new sys.io.Process(cmd, args != null ? args : []);
-		var exitCode = p.exitCode();
-		println(p.stdout.readAll().toString());
-		println(p.stderr.readAll().toString());
-		p.close();
-		return exitCode;
+		if (sys_command_safe != null) {
+			return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
+		} else {
+			var p = new sys.io.Process(cmd, args != null ? args : []);
+			var exitCode = p.exitCode();
+			println(p.stdout.readAll().toString());
+			println(p.stderr.readAll().toString());
+			p.close();
+			return exitCode;
+		}
 	}
 
 	public static function exit( code : Int ) : Void {
@@ -134,6 +138,11 @@
 	private static var set_cwd = neko.Lib.load("std","set_cwd",1);
 	private static var sys_string = neko.Lib.load("std","sys_string",0);
 	private static var sys_command = neko.Lib.load("std","sys_command",1);
+	private static var sys_command_safe = try {
+		neko.Lib.load("std","sys_command_safe",2);
+	} catch(e:Dynamic) {
+		null;
+	};
 	private static var sys_exit = neko.Lib.load("std","sys_exit",1);
 	private static var sys_time = neko.Lib.load("std","sys_time",0);
 	private static var sys_cpu_time = neko.Lib.load("std","sys_cpu_time",0);

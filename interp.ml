@@ -1698,6 +1698,22 @@ let std_lib =
 		"sys_command", Fun1 (fun cmd ->
 			VInt (((get_ctx()).curapi.get_com()).run_command (vstring cmd))
 		);
+		"sys_command_safe", Fun2 (fun prog args ->
+			match prog, args with
+			| VString prog, VArray args ->
+				let args = Array.map vstring args in
+				let dummy_out, dummy_in = Unix.pipe() in
+				begin
+					Unix.close dummy_in;
+					let pid = Unix.create_process prog (Array.append [|prog|] args) dummy_out Unix.stdout Unix.stderr in
+					let _, term = Unix.waitpid [] pid in
+					let exit_code = (match term with
+					| Unix.WEXITED e -> e
+					| Unix.WSIGNALED s | Unix.WSTOPPED s -> if s = 0 then -1 else s) in
+					VInt exit_code
+				end
+			| _ -> error()
+		);
 		"sys_exit", Fun1 (fun code ->
 			if (get_ctx()).curapi.use_cache() then raise (Typecore.Fatal_error ("",Ast.null_pos));
 			raise (Sys_exit(vint code));
