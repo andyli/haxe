@@ -94,6 +94,8 @@
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
 		var p = new sys.io.Process(cmd, args != null ? args : []);
 		var exitCode = p.exitCode();
+		println(p.stdout.readAll().toString());
+		println(p.stderr.readAll().toString());
 		p.close();
 		return exitCode;
 	}
