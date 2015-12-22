@@ -88,7 +88,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 				} catch (e:Dynamic) {
 					trace(e);
 					trace(name);
-					assertTrue(false);
+					throw e;
 				}
 				if (exitCode != random)
 					trace(name);
