@@ -1,6 +1,9 @@
 class FileNames {
 	static public var names(default, never) = [
 		"ok",
+		"ok2",
+		"ok3",
+		"ok4",
 
 		// a space inside
 		"two words",
