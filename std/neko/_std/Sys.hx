@@ -95,12 +95,18 @@
 		if (sys_command_safe != null) {
 			return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
 		} else {
-			var p = new sys.io.Process(cmd, args != null ? args : []);
-			var exitCode = p.exitCode();
-			println(p.stdout.readAll().toString());
-			println(p.stderr.readAll().toString());
-			p.close();
-			return exitCode;
+			switch (systemName()) {
+				case "Windows":
+					var p = new sys.io.Process(cmd, args != null ? args : []);
+					var exitCode = p.exitCode();
+					println(p.stdout.readAll().toString());
+					println(p.stderr.readAll().toString());
+					p.close();
+					return exitCode;
+				case _:
+					cmd = [cmd].concat(args.map(StringTools.quoteUnixArg)).join(" ");
+					return sys_command(untyped cmd.__s);
+			}
 		}
 	}
 
