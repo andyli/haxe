@@ -60,6 +60,9 @@ class TestCommandBase extends haxe.unit.TestCase {
 		// 		".sh";
 		// }
 
+		if (!FileSystem.exists("bin"))
+			FileSystem.createDirectory("bin");
+
 		switch (Sys.systemName()) {
 			case "Windows":
 				var gcc = Sys.command("cl", ["src/ExitCode.c", "/Fobin", "/link", "/out:bin/ExitCode.exe"]);
