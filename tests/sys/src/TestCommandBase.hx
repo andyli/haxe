@@ -46,36 +46,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 	}
 
 	#if !cs //FIXME
-	function testCommandName() {
-		// This is just a script that behaves like ExitCode.hx, 
-		// which exits with the code same as the first given argument. 
-		// var scriptContent = switch (Sys.systemName()) {
-		// 	case "Windows":
-		// 		'@echo off\nexit /b %1';
-		// 	case "Mac", "Linux", _:
-		// 		'#!/bin/sh\nexit $1';
-		// }
-		// var scriptExt = switch (Sys.systemName()) {
-		// 	case "Windows":
-		// 		".bat";
-		// 	case "Mac", "Linux", _:
-		// 		".sh";
-		// }
-
-		if (!FileSystem.exists("bin"))
-			FileSystem.createDirectory("bin");
-
-		switch (Sys.systemName()) {
-			case "Windows":
-				var gcc = Sys.command("cl", ["src/ExitCode.c", "/Fobin", "/link", "/out:bin/ExitCode.exe"]);
-				if (gcc != 0)
-					throw "cannot compile ExitCode";
-			case "Mac", "Linux", _:
-				var gcc = Sys.command("gcc", ["src/ExitCode.c", "-o", "bin/ExitCode"]);
-				if (gcc != 0)
-					throw "cannot compile ExitCode";
-		}
-		
+	function testCommandName() {		
 		var binExt = switch (Sys.systemName()) {
 			case "Windows":
 				".exe";
@@ -86,8 +57,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 		for (name in FileNames.names) {
 			if ((name + binExt).length < 256) {
 				var path = FileSystem.absolutePath("temp/" + name + binExt);
-				// sys.io.File.saveContent(path, scriptContent);
-				sys.io.File.copy("bin/ExitCode" + binExt, path);
+				sys.io.File.copy(ExitCode.getNative(), path);
 				switch (Sys.systemName()) {
 					case "Mac", "Linux":
 						var exitCode = run("chmod", ["a+x", path]);
@@ -124,7 +94,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 
 		for (code in codes) {
 			var args = [Std.string(code)];
-			var exitCode = run("haxe", ["compile-each.hxml", "--run", "ExitCode"].concat(args));
+			var exitCode = run(ExitCode.getNative(), args);
 			assertEquals(code, exitCode);
 		}
 
