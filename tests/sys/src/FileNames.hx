@@ -9,7 +9,7 @@ class FileNames {
 		"two words",
 
 		// Chinese, Japanese
-		#if !(cs || python || php || neko || cpp)
+		#if !(cs || python || php || neko || cpp || java)
 		"中文，にほんご",
 		#end
 
