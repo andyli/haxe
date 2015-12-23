@@ -1,3 +1,5 @@
+import sys.*;
+
 class TestCommandBase extends haxe.unit.TestCase {
 	function run(cmd:String, ?args:Array<String>):Int {
 		throw "should be overridden";
@@ -5,7 +7,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 
 	#if !php //FIXME https://github.com/HaxeFoundation/haxe/issues/3603#issuecomment-86437474
 	function testCommand() {
-		var bin = sys.FileSystem.absolutePath(TestArguments.bin);
+		var bin = FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
 		#if !(cs || cpp)
@@ -83,7 +85,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 
 		for (name in FileNames.names) {
 			if ((name + binExt).length < 256) {
-				var path = sys.FileSystem.absolutePath("temp/" + name + binExt);
+				var path = FileSystem.absolutePath("temp/" + name + binExt);
 				// sys.io.File.saveContent(path, scriptContent);
 				sys.io.File.copy("bin/ExitCode" + binExt, path);
 				switch (Sys.systemName()) {
@@ -107,14 +109,14 @@ class TestCommandBase extends haxe.unit.TestCase {
 				if (exitCode != random)
 					trace(name);
 				assertEquals(random, exitCode);
-				sys.FileSystem.deleteFile(path);
+				FileSystem.deleteFile(path);
 			}
 		}
 	}
 	#end //!cs
 
 	function testExitCode() {
-		var bin = sys.FileSystem.absolutePath(ExitCode.bin);
+		var bin = FileSystem.absolutePath(ExitCode.bin);
 
 		// Just test only a few to save time.
 		// They have special meanings: http://tldp.org/LDP/abs/html/exitcodes.html
