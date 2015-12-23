@@ -59,6 +59,17 @@ class TestCommandBase extends haxe.unit.TestCase {
 		// 	case "Mac", "Linux", _:
 		// 		".sh";
 		// }
+
+		switch (Sys.systemName()) {
+			case "Windows":
+				var gcc = Sys.command("cl", ["src/ExitCode.c", "/Fobin", "/link", "/out:bin/ExitCode.exe"]);
+				if (gcc != 0)
+					throw "cannot compile ExitCode";
+			case "Mac", "Linux", _:
+				var gcc = Sys.command("gcc", ["src/ExitCode.c", "-o", "bin/ExitCode"]);
+				if (gcc != 0)
+					throw "cannot compile ExitCode";
+		}
 		
 		var binExt = switch (Sys.systemName()) {
 			case "Windows":
@@ -71,7 +82,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 			if ((name + binExt).length < 256) {
 				var path = sys.FileSystem.absolutePath("temp/" + name + binExt);
 				// sys.io.File.saveContent(path, scriptContent);
-				sys.io.File.copy("bin/neko/ExitCode" + binExt, path);
+				sys.io.File.copy("bin/ExitCode" + binExt, path);
 				switch (Sys.systemName()) {
 					case "Mac", "Linux":
 						var exitCode = run("chmod", ["a+x", path]);

@@ -1,9 +1,9 @@
--cp src
--main ExitCode
--neko bin/neko/ExitCode.n
--cmd nekotools boot bin/neko/ExitCode.n
+# -cp src
+# -main ExitCode
+# -neko bin/neko/ExitCode.n
+# -cmd nekotools boot bin/neko/ExitCode.n
 
---next
+# --next
 
 -debug
 -cp src
