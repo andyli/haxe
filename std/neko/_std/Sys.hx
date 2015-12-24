@@ -98,11 +98,13 @@
 			switch (systemName()) {
 				case "Windows":
 					var p = new sys.io.Process(cmd, args != null ? args : []);
-					var exitCode = p.exitCode();
 					println(p.stdout.readAll().toString());
 					println(p.stderr.readAll().toString());
+					var exitCode = p.exitCode();
 					p.close();
 					return exitCode;
+					// cmd = [cmd].concat(args).map(StringTools.quoteWinArg).join(" ");
+					// return sys_command(untyped cmd.__s);
 				case _:
 					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
 					return sys_command(untyped cmd.__s);
