@@ -92,22 +92,28 @@
 	}
 
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		if (sys_command_safe != null) {
-			return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
+		if (args == null) {
+			return sys_command(untyped cmd.__s);
 		} else {
-			switch (systemName()) {
-				case "Windows":
-					var p = new sys.io.Process(cmd, args != null ? args : []);
-					println(p.stdout.readAll().toString());
-					println(p.stderr.readAll().toString());
-					var exitCode = p.exitCode();
-					p.close();
-					return exitCode;
-					// cmd = [cmd].concat(args).map(StringTools.quoteWinArg).join(" ");
-					// return sys_command(untyped cmd.__s);
-				case _:
-					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
-					return sys_command(untyped cmd.__s);
+			if (sys_command_safe != null) {
+				return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
+			} else {
+				switch (systemName()) {
+					case "Windows":
+						var p = new sys.io.Process(cmd, args != null ? args : []);
+						var stdout = p.stdout.readAll().toString();
+						if (stdout != "")
+							println(stdout);
+						var stderr = p.stderr.readAll().toString();
+						if (stderr != "")
+							println(stderr);
+						var exitCode = p.exitCode();
+						p.close();
+						return exitCode;
+					case _:
+						cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
+						return sys_command(untyped cmd.__s);
+				}
 			}
 		}
 	}
