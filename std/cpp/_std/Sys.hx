@@ -82,10 +82,21 @@
 	}
 
 	public static function command( cmd : String, ?args : Array<String> ) : Int {
-		var cmd = [cmd].concat(args)
-			.map(systemName() == "Windows" ? StringTools.quoteWinArg : StringTools.quoteUnixArg)
-			.join(" ");
-		return sys_command(cmd);
+		if (args == null) {
+			return sys_command(cmd);
+		} else {
+			switch (systemName()) {
+				case "Windows":
+					cmd = [
+						for (a in [StringTools.replace(cmd, "/", "\\")].concat(args))
+						StringTools.quoteWinArg(a, true)
+					].join(" ");
+					return sys_command(cmd);
+				case _:
+					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
+					return sys_command(cmd);
+			}
+		}
 	}
 
 	public static function exit( code : Int ) : Void {

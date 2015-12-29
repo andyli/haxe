@@ -95,25 +95,17 @@
 		if (args == null) {
 			return sys_command(untyped cmd.__s);
 		} else {
-			if (sys_command_safe != null) {
-				return sys_command_safe(untyped cmd.__s, neko.Lib.haxeToNeko(args == null ? [] : args));
-			} else {
-				switch (systemName()) {
-					case "Windows":
-						var p = new sys.io.Process(cmd, args != null ? args : []);
-						var stdout = p.stdout.readAll().toString();
-						if (stdout != "")
-							println(stdout);
-						var stderr = p.stderr.readAll().toString();
-						if (stderr != "")
-							println(stderr);
-						var exitCode = p.exitCode();
-						p.close();
-						return exitCode;
-					case _:
-						cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
-						return sys_command(untyped cmd.__s);
-				}
+			switch (systemName()) {
+				case "Windows":
+					cmd = [
+						for (a in [StringTools.replace(cmd, "/", "\\")].concat(args))
+						StringTools.quoteWinArg(a, true)
+					].join(" ");
+					trace(cmd);
+					return sys_command(untyped cmd.__s);
+				case _:
+					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
+					return sys_command(untyped cmd.__s);
 			}
 		}
 	}

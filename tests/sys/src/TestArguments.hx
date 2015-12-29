@@ -40,21 +40,26 @@ class TestArguments extends haxe.unit.TestCase {
 		// kind of an escaped space
 		"\\ ",
 
-		#if !cpp //https://github.com/HaxeFoundation/hxcpp/issues/342
 		// empty string
 		"",
-
-		// linebreak
-		"\n",
-		#end
-
-		// Chinese, Japanese
-		// "中文，にほんご",
 
 		// complex stuff
 		"a b  %PATH% $HOME c\\&<>[\\\"]#{}|%$\\\"\"",
 		#end
-	];
+	].concat(switch (Sys.systemName()) {
+		case "Windows":
+		[
+
+		];
+		case _:
+		[
+			// linebreak
+			"\n",
+
+			// Chinese, Japanese
+			"中文，にほんご",
+		];
+	});
 
 	static public var bin:String =
 	#if neko
