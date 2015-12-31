@@ -5,7 +5,6 @@ class TestCommandBase extends haxe.unit.TestCase {
 		throw "should be overridden";
 	}
 
-	#if !php //FIXME https://github.com/HaxeFoundation/haxe/issues/3603#issuecomment-86437474
 	function testCommand() {
 		var bin = FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
@@ -56,13 +55,12 @@ class TestCommandBase extends haxe.unit.TestCase {
 		for (name in FileNames.names) {
 			if ((name + binExt).length < 256) {
 				var path = FileSystem.absolutePath("temp/" + name + binExt);
-				sys.io.File.copy(ExitCode.getNative(), path);
 				switch (Sys.systemName()) {
-					case "Mac", "Linux":
-						var exitCode = run("chmod", ["a+x", path]);
-						assertEquals(0, exitCode);
 					case "Windows":
-						//pass
+						sys.io.File.copy(ExitCode.getNative(), path);
+					case "Mac", "Linux", _:
+						var exitCode = run("cp", [ExitCode.getNative(), path]);
+						assertEquals(0, exitCode);
 				}
 
 				Sys.sleep(0.1);
@@ -124,5 +122,4 @@ class TestCommandBase extends haxe.unit.TestCase {
 			assertEquals(code, exitCode);
 		}
 	}
-	#end
 }
