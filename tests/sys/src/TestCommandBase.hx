@@ -45,7 +45,6 @@ class TestCommandBase extends haxe.unit.TestCase {
 		assertEquals(0, exitCode);
 	}
 
-	#if !cs //FIXME
 	function testCommandName() {		
 		var binExt = switch (Sys.systemName()) {
 			case "Windows":
@@ -83,7 +82,6 @@ class TestCommandBase extends haxe.unit.TestCase {
 			}
 		}
 	}
-	#end //!cs
 
 	function testExitCode() {
 		var bin = FileSystem.absolutePath(ExitCode.bin);

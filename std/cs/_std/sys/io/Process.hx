@@ -41,7 +41,10 @@ class Process {
 		this.native = new NativeProcess();
 		native.StartInfo.FileName = cmd;
 		native.StartInfo.CreateNoWindow = true;
-		native.StartInfo.Arguments = args.map(StringTools.quoteWinArg).join(" ");
+		native.StartInfo.Arguments = [
+			for (a in args)
+			StringTools.quoteWinArg(a, false)
+		].join(" ");
 		native.StartInfo.RedirectStandardError = native.StartInfo.RedirectStandardInput = native.StartInfo.RedirectStandardOutput = true;
 		native.StartInfo.UseShellExecute = false;
 

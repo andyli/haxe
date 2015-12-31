@@ -53,8 +53,10 @@ class TestArguments extends haxe.unit.TestCase {
 		];
 		case _:
 		[
+			#if !cs
 			// linebreak
 			"\n",
+			#end
 
 			// Chinese, Japanese
 			"中文，にほんご",
