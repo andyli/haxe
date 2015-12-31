@@ -144,10 +144,10 @@ StringTools.isEof(0) == true;
 #end
 
 // quoteWinArg
-StringTools.quoteWinArg("abc") == "abc";
-StringTools.quoteWinArg("ab c") == '"ab c"';
-StringTools.quoteWinArg("ab\tc") == '"ab\tc"';
-StringTools.quoteWinArg("") == '""';
+StringTools.quoteWinArg("abc", false) == "abc";
+StringTools.quoteWinArg("ab c", false) == '"ab c"';
+StringTools.quoteWinArg("ab\tc", false) == '"ab\tc"';
+StringTools.quoteWinArg("", false) == '""';
 
 // quoteUnixArg
 StringTools.quoteUnixArg("abc") == "abc";
