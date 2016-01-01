@@ -19,17 +19,6 @@ class TestArguments extends haxe.unit.TestCase {
 		"<<",
 		">>",
 
-		#if !cs
-		// backslashes
-		"\\",
-		"\\\\",
-		"\\\\\\",
-
-		// single quote
-		"'",
-		// kind of an escaped single quote
-		"\\'",
-
 		// double quote
 		'"',
 		// kind of an escaped double quote
@@ -45,15 +34,32 @@ class TestArguments extends haxe.unit.TestCase {
 
 		// complex stuff
 		"a b  %PATH% $HOME c\\&<>[\\\"]#{}|%$\\\"\"",
-		#end
 	].concat(switch (Sys.systemName()) {
 		case "Windows":
 		[
+			// backslashes
+			"\\",
+			"\\\\",
+			"\\\\\\",
 
+			// single quote
+			"'",
+			// kind of an escaped single quote
+			"\\'",
 		];
 		case _:
 		[
 			#if !cs
+			// backslashes
+			"\\",
+			"\\\\",
+			"\\\\\\",
+
+			// single quote
+			"'",
+			// kind of an escaped single quote
+			"\\'",
+
 			// linebreak
 			"\n",
 			#end
