@@ -9,7 +9,7 @@ class TestCommandBase extends haxe.unit.TestCase {
 		var bin = FileSystem.absolutePath(TestArguments.bin);
 		var args = TestArguments.expectedArgs;
 
-		#if !(cs || cpp)
+		#if !cs
 		var exitCode = run("haxe", ["compile-each.hxml", "--run", "TestArguments"].concat(args));
 		if (exitCode != 0)
 			trace(sys.io.File.getContent(TestArguments.log));

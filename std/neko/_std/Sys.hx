@@ -101,7 +101,6 @@
 						for (a in [StringTools.replace(cmd, "/", "\\")].concat(args))
 						StringTools.quoteWinArg(a, true)
 					].join(" ");
-					trace(cmd);
 					return sys_command(untyped cmd.__s);
 				case _:
 					cmd = [cmd].concat(args).map(StringTools.quoteUnixArg).join(" ");
