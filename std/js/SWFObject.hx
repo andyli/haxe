@@ -34,7 +34,7 @@ extern class SWFObject {
 
 	private static function __init__() : Void untyped {
 		#if embed_js
-		haxe.macro.Compiler.includeFile("js/swfobject-1.5.js");
+		#error "Haxe no longer bundle third-party JS files. Please remove `-D embed_js`. You may download the file and use `haxe.macro.Compiler.includeFile`."
 		#end
 		js.SWFObject = deconcept.SWFObject;
 	}
