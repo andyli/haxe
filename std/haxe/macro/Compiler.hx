@@ -411,17 +411,30 @@ class Compiler {
 	#if (js || lua || macro)
 	/**
 		Embed a JavaScript file at compile time (can be called by `--macro` or within an `__init__` method).
+
+		`position` can be either
+
+		 * `"top"` (default):
+		   Prepend the file content to the output file.
+
+		 * `"closure"`:
+		   Prepend the file content to the body of the top-level closure.
+		   Since the closure is in strict-mode, there may be run-time error if the input is not strict-mode-compatible.
+
+		 * `"inline"`:
+		   Directly inject the file content at the call site.
 	**/
-	public static #if !macro macro #end function includeFile( file : String, position:IncludePosition = Top ) {
-		return switch ((position:String).toLowerCase()) {
-			case Inline:
+	public static #if !macro macro #end function includeFile( file : String, position : String = "top"  )
+	{
+		return switch (position) {
+			case "inline":
 				if (Context.getLocalModule() == "")
 					Context.error("Cannot use inline mode when includeFile is called by `--macro`", Context.currentPos());
 
 				var f = try sys.io.File.getContent(Context.resolvePath(file)) catch( e : Dynamic ) Context.error(Std.string(e), Context.currentPos());
 				var p = Context.currentPos();
 				{ expr : EUntyped( { expr : ECall( { expr : EConst(CIdent("__js__")), pos : p }, [ { expr : EConst(CString(f)), pos : p } ]), pos : p } ), pos : p };
-			case Top | Closure:
+			case "top" | "closure":
 				@:privateAccess Context.includeFile(file, position);
 				macro {};
 			case _:
@@ -431,21 +444,4 @@ class Compiler {
 
 	#end
 
-}
-
-@:enum abstract IncludePosition(String) from String to String {
-	/**
-		Prepend the file content to the output file.
-	*/
-	var Top = "top";
-	/**
-		Prepend the file content to the body of the top-level closure.
-
-		Since the closure is in strict-mode, there may be run-time error if the input is not strict-mode-compatible.
-	*/
-	var Closure = "closure";
-	/**
-		Directly inject the file content at the call site.
-	*/
-	var Inline = "inline";
 }
