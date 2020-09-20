@@ -47,7 +47,7 @@ jobs:
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'cd "$OLDPWD" && tar -C / -xvf libmbedtls.tar.xz')
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'cd "$OLDPWD" && tar -xf opam.tar.xz')
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'cd "$OLDPWD" && bash opam$(ARCH)/install.sh')
-          & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'opam init mingw "https://github.com/fdopen/opam-repository-mingw.git#opam2" --comp 4.07.0+mingw$(ARCH)c --switch 4.07.0+mingw$(ARCH)c --auto-setup --yes 2>&1')
+          & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'opam init mingw "https://github.com/fdopen/opam-repository-mingw.git#opam2" --comp 4.10.0+mingw$(ARCH)c --switch 4.10.0+mingw$(ARCH)c --disable-sandboxing --auto-setup --yes 2>&1')
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'opam update --yes 2>&1')
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'cd "$OLDPWD" && opam pin add haxe . --kind=path --no-action --yes 2>&1')
           & "$(CYG_ROOT)/bin/bash.exe" @('-lc', 'opam install haxe --deps-only --yes 2>&1')
